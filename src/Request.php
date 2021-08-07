@@ -153,7 +153,7 @@ class Request
      *
      * @var string
      */
-    private static $current_action = '';
+    public static $current_action = '';
 
     /**
      * Available actions to send
@@ -680,7 +680,7 @@ class Request
      *
      * @throws TelegramException
      */
-    private static function ensureNonEmptyData(array $data): void
+    public static function ensureNonEmptyData(array $data): void
     {
         if (count($data) === 0) {
             throw new TelegramException('Data is empty!');
@@ -843,7 +843,7 @@ class Request
      *
      * @throws TelegramException
      */
-    private static function limitTelegramRequests(string $action, array $data = []): void
+    public static function limitTelegramRequests(string $action, array $data = []): void
     {
         if (self::$limiter_enabled) {
             $limited_methods = [

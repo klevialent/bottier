@@ -23,13 +23,19 @@
             "role": "Developer"
         },
         {
+            "name": "Klevialent Man",
+            "email": "klevialent@gmail.com",
+            "homepage": "https://klevialent.ru",
+            "role": "Developer"
+        },
+        {
             "name": "PHP Telegram Bot Team",
             "homepage": "https://github.com/php-telegram-bot/core/graphs/contributors",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-json": "*",
