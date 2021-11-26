@@ -1,17 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Longman\TelegramBot;
 
+use JsonException;
+use Longman\TelegramBot\AbstractBot\BotInterface;
+use Longman\TelegramBot\AbstractBot\Entity\CommandData;
+use Longman\TelegramBot\AbstractBot\Exception\SendMessageException;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entity\TelegramCommandData;
 use Longman\TelegramBot\Exception\InvalidBotTokenException;
 use Longman\TelegramBot\Exception\TelegramException;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class TelegramApi
+class TelegramApi implements BotInterface
 {
     public function __construct(
         private Telegram $telegram,
@@ -20,22 +24,28 @@ class TelegramApi
     ) {}
 
     /**
-     * @throws InvalidBotTokenException
-     * @throws TelegramException
+     * @throws SendMessageException
      */
-    public function sendMessage(string $message, int|string $chatId): ServerResponse
+    public function sendMessage(string $message, int|string $chatId): void
     {
         $data = [
             'text' => $message,
             'chat_id' => $chatId,
         ];
 
-        return $this->act('sendMessage', $data);
+        try {
+            $this->act('sendMessage', $data);
+        } catch (InvalidBotTokenException $tokenException) {
+            throw new RuntimeException('Wrong telegram token.');
+        } catch (TelegramException|JsonException $e) {
+            throw new SendMessageException($e->getMessage(), 0, $e);
+        }
     }
 
     /**
      * @throws InvalidBotTokenException
      * @throws TelegramException
+     * @throws JsonException
      */
     private function act(string $action, array $data = []): ServerResponse
     {
@@ -82,5 +92,10 @@ class TelegramApi
         }
 
         return $result;
+    }
+
+    public function getEntityCommandData(array $commandData): CommandData
+    {
+        return new TelegramCommandData($commandData);
     }
 }
