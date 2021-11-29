@@ -13,4 +13,6 @@ interface CommandData
     public function getChat(): Chat;
 
     public function getChatId(): string|int;
+
+    public function getUsername(): string;
 }

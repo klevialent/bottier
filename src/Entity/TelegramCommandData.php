@@ -52,6 +52,11 @@ class TelegramCommandData extends AbstractEntity implements CommandData
         throw new ArgumentNotFoundException((string)$key, $this->arguments);
     }
 
+    public function getUsername(): string
+    {
+        return $this->message['from']['username'];
+    }
+
     private function getText(): string
     {
         return $this->message['text'];
