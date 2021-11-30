@@ -4,6 +4,7 @@ namespace Longman\TelegramBot\AbstractBot;
 
 use Longman\TelegramBot\AbstractBot\Command\CommandRegistry;
 use Longman\TelegramBot\AbstractBot\Entity\Chat;
+use Longman\TelegramBot\AbstractBot\Exception\CommandNotFoundException;
 use Longman\TelegramBot\AbstractBot\Exception\HandleCommandException;
 use Longman\TelegramBot\AbstractBot\Exception\SendMessageException;
 
@@ -18,7 +19,13 @@ class BotsApi
     {
         $bot = $this->botRegistry->getBotByRequestData($commandData);
         $commandEntity = $bot->getEntityCommandData($commandData);
-        $command = $this->commandRegistry->getCommand($commandEntity);
+
+        try {
+            $command = $this->commandRegistry->getCommand($commandEntity);
+        } catch (CommandNotFoundException $e) {
+            $bot->sendMessage($e->getMessage(), $commandEntity->getChatId());
+            return;
+        }
 
         $command->execute($bot, $commandEntity);
     }
