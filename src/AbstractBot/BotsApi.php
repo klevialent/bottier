@@ -18,6 +18,10 @@ class BotsApi
     public function handleCommand(array $commandData): void
     {
         $bot = $this->botRegistry->getBotByRequestData($commandData);
+        if (!$bot) {
+            return;
+        }
+        
         $commandEntity = $bot->getEntityCommandData($commandData);
 
         try {
