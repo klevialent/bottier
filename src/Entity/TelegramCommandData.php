@@ -5,7 +5,6 @@ namespace Longman\TelegramBot\Entity;
 use Longman\TelegramBot\AbstractBot\Entity\AbstractEntity;
 use Longman\TelegramBot\AbstractBot\Entity\Chat;
 use Longman\TelegramBot\AbstractBot\Entity\CommandData;
-use Longman\TelegramBot\AbstractBot\Exception\ArgumentNotFoundException;
 
 class TelegramCommandData extends AbstractEntity implements CommandData
 {
@@ -40,16 +39,13 @@ class TelegramCommandData extends AbstractEntity implements CommandData
         return $this->arguments;
     }
 
-    /**
-     * @throws ArgumentNotFoundException
-     */
-    public function getArgument(int|string $key): string
+    public function getArgument(int|string $key): ?string
     {
         if (array_key_exists($key, $this->arguments)) {
             return (string)$this->arguments[$key];
         }
-
-        throw new ArgumentNotFoundException((string)$key, $this->arguments);
+        
+        return null;
     }
 
     public function getUsername(): string

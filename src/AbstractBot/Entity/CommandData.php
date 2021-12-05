@@ -8,7 +8,7 @@ interface CommandData
 
     public function getArguments(): array;
 
-    public function getArgument(int|string $key): string;
+    public function getArgument(int|string $key): ?string;
 
     public function getChat(): Chat;
 
